@@ -10,7 +10,7 @@ const version = (pkg && pkg.packageJson.version)
 program
     .version(version)
     .argument('filename', 'text file containing list of URLs')
-    .option('-D, --dir <dir>', 'Destination Directory', '.')
+    .option('-D, --dir <dir>', 'Destination Directory', 'downloads')
     .option('-O, --overwrite', 'Overwrite the file if already exists', false)
     .showHelpAfterError()
     .parse(program.argv)

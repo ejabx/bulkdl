@@ -42,24 +42,36 @@ const fetch = async (url, init) => {
 /**
  * Downloads a single file from a URL
  * @param {string} url The URL to the download
+ * @param {string} previous The previous URL. We use it if all we have is a filename
  * @param {string} filePath Output directory
  * @param {string} fileName Output name
  * @param {boolean} overwrite Overwrite the file if it already exists
  */
 export async function downloadFile (
     url,
+    previous,
     filePath,
     fileName,
     overwrite
   ) {
     // Validation
-    if (!isURL(url)) throw new Error('Invalid URL')
+    if (!isURL(url)) {
+      // can we coerce this base using the last url?
+      const previousURL = previous 
+        ? previous.split('/').slice(0, -1).join('/')
+        : ''
+
+      url = `${previousURL}/${url}`
+
+      // try again
+      if (!isURL(url)) throw new Error('Invalid URL')
+    }
     if (filePath === undefined || filePath === null || filePath === '') {
       throw new Error('Please specify a File Path')
     }
   
     try {
-      const fullFileName = `${fileName.split('/').pop()}` // ${fileExt}
+      const fullFileName = `${fileName.split('/').pop()}`
       const fullPath = path.join(filePath, fullFileName)
 
       let skip = false
@@ -122,12 +134,17 @@ export async function downloadFiles (
     });
     bar.start(URLs.length, 0)
   
-    let num_of_errors = 0, num_of_urls = 0
+    let num_of_errors = 0, num_of_urls = 0, previous = ''
   
     try {
       await Promise.all(URLs.map((url, i) => {
         if (!url) return Promise.reject('Invalid URL')
-        else return downloadFile(url, outputDir, url, overwrite)
+        else {
+          previous = i > 0 && isURL(URLs[i - 1]) 
+            ? URLs[i - 1]
+            : previous
+
+          return downloadFile(url, previous, outputDir, url, overwrite)
           .catch(async err => {
             await wfp('./bulkdl.log', err.message)
             num_of_errors++
@@ -135,6 +152,7 @@ export async function downloadFiles (
           .finally(() => {
             bar.update(++num_of_urls, { url })
           })
+        }
       }))
     } catch (err) {
       console.error(err.message)
