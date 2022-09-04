@@ -2,7 +2,12 @@ import isURL from 'is-url'
 import path from 'path'
 import { parse as parseURL } from 'url'
 import unfetch from 'node-fetch'
-import { writeFile as wf, readFileSync as rfs, lstat } from 'fs'
+import {
+  writeFile as wf,
+  readFileSync as rfs,
+  access,
+  constants
+} from 'fs'
 import mkdirp from 'mkdirp'
 import { parse } from 'path'
 import { promisify } from 'util'
@@ -10,6 +15,13 @@ import cliProgress from 'cli-progress'
 import colors from 'ansi-colors'
 
 const wfp = promisify(wf)
+const accessp = promisify(access)
+
+const checkFile = async(path) => {
+  return accessp(path, constants.F_OK)
+    .then(() => true)
+    .catch(() => false)
+}
 
 const writeFile = async (path, data) => {
   const { dir } = parse(path)
@@ -27,10 +39,18 @@ const fetch = async (url, init) => {
   return resp
 }
 
+/**
+ * Downloads a single file from a URL
+ * @param {string} url The URL to the download
+ * @param {string} filePath Output directory
+ * @param {string} fileName Output name
+ * @param {boolean} overwrite Overwrite the file if it already exists
+ */
 export async function downloadFile (
     url,
     filePath,
-    fileName
+    fileName,
+    overwrite
   ) {
     // Validation
     if (!isURL(url)) throw new Error('Invalid URL')
@@ -39,32 +59,46 @@ export async function downloadFile (
     }
   
     try {
-      // Download file contents
-      const resp = await fetch(url)
-  
-      // Parse a filename
-      const parsedFile = parseURL(url).pathname
-      if (parsedFile === undefined) throw new Error('cannot determine file name')
-  
-      const fileExt = path.extname(parsedFile)
-      if (fileName === undefined || fileName === null || fileName === '') {
-        fileName = path.basename(parsedFile, fileExt)
-      }
-  
-      // File Operations
       const fullFileName = `${fileName.split('/').pop()}` // ${fileExt}
       const fullPath = path.join(filePath, fullFileName)
 
-      const buffer = Buffer.from(await resp.arrayBuffer())
-      await writeFile(fullPath, buffer)
+      let skip = false
+      if (!overwrite) {
+        skip = await checkFile(fullPath)
+      }
+
+      if (!skip) {
+        // Download file contents
+        const resp = await fetch(url)
+    
+        // Parse a filename
+        const parsedFile = parseURL(url).pathname
+        if (parsedFile === undefined) throw new Error('cannot determine file name')
+    
+        const fileExt = path.extname(parsedFile)
+        if (fileName === undefined || fileName === null || fileName === '') {
+          fileName = path.basename(parsedFile, fileExt)
+        }
+    
+        // File Operations
+        const buffer = Buffer.from(await resp.arrayBuffer())
+        await writeFile(fullPath, buffer)
+      }
     } catch (err) {
       throw new Error(`${url}: ${err.message}`)
     }
   }
 
+/**
+ * Downloads URLs into a directory
+ * @param {Array<string>} URLs The array of URLs
+ * @param {string} outputDir An output directory. Will create if it doesn't exist
+ * @param {boolean} overwrite Overwrite the file if it already exists
+ */
 export async function downloadFiles (
     URLs,
-    outputDir
+    outputDir,
+    overwrite
 ) {
     URLs = URLs.map(url => {
         if (isURL(url)) return url
@@ -93,7 +127,7 @@ export async function downloadFiles (
     try {
       await Promise.all(URLs.map((url, i) => {
         if (!url) return Promise.reject('Invalid URL')
-        else return downloadFile(url, outputDir, url)
+        else return downloadFile(url, outputDir, url, overwrite)
           .catch(async err => {
             await wfp('./bulkdl.log', err.message)
             num_of_errors++

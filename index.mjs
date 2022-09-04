@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { program } from 'commander'
 import { readPackageUp } from 'read-pkg-up'
 import { downloadFiles } from './download.mjs'
@@ -7,7 +9,10 @@ const version = (pkg && pkg.packageJson.version)
 
 program
     .version(version)
-    .option('-D, --dir <dir>', 'Destination Directory')
+    .argument('filename', 'text file containing list of URLs')
+    .option('-D, --dir <dir>', 'Destination Directory', '.')
+    .option('-O, --overwrite', 'Overwrite the file if already exists', false)
+    .showHelpAfterError()
     .parse(program.argv)
 
 const main = async prog => {
@@ -15,10 +20,11 @@ const main = async prog => {
 
     try {
         const options = program.opts()
-        const outputDir = options.dir || '.'
+        const outputDir = options.dir
+        const overwrite = options.overwrite
         const args = prog.args
 
-        downloadFiles(args, outputDir)
+        downloadFiles(args, outputDir, overwrite)
     } catch (err) {
         console.error(err)
     }

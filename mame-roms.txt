@@ -5,7 +5,10 @@ https://archive.org/download/mame-merged/mame-merged/goldnaxe.zip
 https://archive.org/download/mame-merged/mame-merged/gyruss.zip
 https://archive.org/download/mame-merged/mame-merged/hangon.zip
 https://archive.org/download/mame-merged/mame-merged/mspacman.zip
+https://archive.org/download/mame-merged/mame-merged/mk2.zip
 https://archive.org/download/mame-merged/mame-merged/outrun.zip
 https://archive.org/download/mame-merged/mame-merged/sf2.zip
 https://archive.org/download/mame-merged/mame-merged/sf2ce.zip
 https://archive.org/download/mame-merged/mame-merged/sf2hf.zip
+https://archive.org/download/mame-merged/mame-merged/shinobi.zip
+https://archive.org/download/mame-merged/mame-merged/sharrier.zip
