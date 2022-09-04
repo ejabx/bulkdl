@@ -17,7 +17,7 @@ import colors from 'ansi-colors'
 const wfp = promisify(wf)
 const accessp = promisify(access)
 
-const checkFile = async(path) => {
+const checkFile = async (path) => {
   return accessp(path, constants.F_OK)
     .then(() => true)
     .catch(() => false)
