@@ -1,9 +1,7 @@
 # BulkDL
-Bulk downloader.
+Bulk download URLs from a text file.
 
-Original intent was to bulk download URLs from the [internet archive](https://archive.org/download/mame-merged/mame-merged/).
-
-To install: `npm install -g`.
+To install: `npm install -g bulkdl`.
 
 ```
 Usage: bulkdl [options] <filename>
@@ -33,3 +31,5 @@ https://url/1
 2
 3
 ```
+
+Credit: Inspired 
