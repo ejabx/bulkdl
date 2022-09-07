@@ -1,5 +1,8 @@
 roms/
 downloads/
 node_modules/
+bin/
+.parcel-cache/
 .vscode/
 .DS_Store
+bulkdl.log

@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#! /usr/bin/env node
 
 import { program } from 'commander'
 import { readPackageUp } from 'read-pkg-up'
@@ -9,9 +9,11 @@ const version = (pkg && pkg.packageJson.version)
 
 program
     .version(version)
+program
     .argument('filename', 'text file containing list of URLs')
     .option('-D, --dir <dir>', 'Destination Directory', 'downloads')
     .option('-O, --overwrite', 'Overwrite the file if already exists', false)
+
     .showHelpAfterError()
     .parse(program.argv)
 

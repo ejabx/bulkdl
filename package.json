@@ -2,12 +2,13 @@
   "name": "bulkdl",
   "version": "1.0.0",
   "description": "Bulk Downloader",
-  "main": "index.mjs",
+  "main": "bin/index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "bulkdl": "./index.mjs"
+    "bulkdl": "src/index.mjs"
   },
   "author": "Eric Bryant",
   "license": "ISC",

@@ -1,9 +1,9 @@
 # BulkDL
 Bulk downloader.
 
-Original intent was to bulk download mame roms from the [internet archive](https://archive.org/download/mame-merged/mame-merged/).
+Original intent was to bulk download URLs from the [internet archive](https://archive.org/download/mame-merged/mame-merged/).
 
-After `npm install` do `npm link` to symlink it globally.
+To install: `npm install -g`.
 
 ```
 Usage: bulkdl [options] <filename>
