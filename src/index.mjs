@@ -11,7 +11,7 @@ program
     .version(version)
 program
     .argument('filename', 'text file containing list of URLs')
-    .option('-D, --dir <dir>', 'Destination Directory', 'downloads')
+    .option('-D, --dir <dir>', 'Destination Directory', '.')
     .option('-O, --overwrite', 'Overwrite the file if already exists', false)
 
     .showHelpAfterError()

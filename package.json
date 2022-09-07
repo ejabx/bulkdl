@@ -1,6 +1,6 @@
 {
   "name": "bulkdl",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Bulk Downloader",
   "main": "bin/index.js",
   "type": "module",

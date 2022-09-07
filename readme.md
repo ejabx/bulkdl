@@ -13,7 +13,7 @@ Arguments:
 
 Options:
   -V, --version    output the version number
-  -D, --dir <dir>  Destination Directory (default: "downloads")
+  -D, --dir <dir>  Destination Directory (default: ".")
   -O, --overwrite  Overwrite the file if already exists (default: false)
   -h, --help       display help for command
 ```
